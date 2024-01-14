@@ -12,7 +12,6 @@ import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import com.dongun.crop.model.AspectRatio
 
 /**
  * Draw grid that is divided by 2 vertical and 2 horizontal lines for overlay
@@ -98,7 +97,7 @@ fun Modifier.drawWithLayer(block: DrawScope.() -> Unit) = this.then(
  * [BlendMode.SrcIn]. Shape contains image while background is checker
  */
 fun Modifier.drawOutlineWithBlendModeAndChecker(
-    aspectRatio: AspectRatio,
+    aspectRatio: Float,
     shape: Shape,
     density: Density,
     dstBitmap: ImageBitmap,

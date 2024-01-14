@@ -13,7 +13,6 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.unit.IntSize
 import com.dongun.crop.TouchRegion
-import com.dongun.crop.model.AspectRatio
 import com.dongun.crop.model.CropData
 import com.dongun.crop.settings.CropProperties
 
@@ -50,7 +49,7 @@ abstract class CropState internal constructor(
     drawAreaSize: IntSize,
     maxZoom: Float,
     internal var fling: Boolean = true,
-    internal var aspectRatio: AspectRatio,
+    internal var aspectRatio: Float,
     internal var overlayRatio: Float,
     zoomable: Boolean = true,
     pannable: Boolean = true,
@@ -131,7 +130,7 @@ abstract class CropState internal constructor(
         val overlayRatio = cropProperties.overlayRatio
 
         if (
-            this.aspectRatio.value != aspectRatio.value ||
+            this.aspectRatio != aspectRatio ||
             maxZoom != zoomMax ||
             this.overlayRatio != overlayRatio ||
             forceUpdate
@@ -395,31 +394,13 @@ abstract class CropState internal constructor(
         containerWidth: Float,
         containerHeight: Float,
         drawAreaWidth: Float,
-        aspectRatio: AspectRatio,
+        aspectRatio: Float,
         coefficient: Float
     ): Rect {
-
-        if (aspectRatio == AspectRatio.Original) {
-            val imageAspectRatio = imageSize.width.toFloat() / imageSize.height.toFloat()
-
-            // Maximum width and height overlay rectangle can be measured with
-            val overlayWidthMax = drawAreaWidth.coerceAtMost(containerWidth * coefficient)
-            val overlayHeightMax =
-                (overlayWidthMax / imageAspectRatio).coerceAtMost(containerHeight * coefficient)
-
-            val offsetX = (containerWidth - overlayWidthMax) / 2f
-            val offsetY = (containerHeight - overlayHeightMax) / 2f
-
-            return Rect(
-                offset = Offset(offsetX, offsetY),
-                size = Size(overlayWidthMax, overlayHeightMax)
-            )
-        }
-
         val overlayWidthMax = containerWidth * coefficient
         val overlayHeightMax = containerHeight * coefficient
 
-        val aspectRatioValue = aspectRatio.value
+        val aspectRatioValue = aspectRatio
 
         var width = overlayWidthMax
         var height = overlayWidthMax / aspectRatioValue

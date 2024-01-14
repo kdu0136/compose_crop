@@ -3,7 +3,6 @@ package com.dongun.crop.state
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.unit.IntSize
-import com.dongun.crop.model.AspectRatio
 import kotlinx.coroutines.coroutineScope
 
 /**
@@ -26,7 +25,7 @@ class StaticCropState internal constructor(
     imageSize: IntSize,
     containerSize: IntSize,
     drawAreaSize: IntSize,
-    aspectRatio: AspectRatio,
+    aspectRatio: Float,
     overlayRatio: Float,
     maxZoom: Float = 5f,
     fling: Boolean = false,

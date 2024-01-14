@@ -18,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
@@ -29,6 +30,7 @@ import coil.ImageLoader
 import coil.request.ImageRequest
 import coil.request.SuccessResult
 import com.dongun.crop.ImageCropper
+import com.dongun.crop.PrintLog
 import com.dongun.crop.model.OutlineType
 import com.dongun.crop.model.OvalCropShape
 import com.dongun.crop.settings.CropDefaults
@@ -69,11 +71,11 @@ fun DemoView(
     var cropStyle by remember {
         mutableStateOf(
             CropDefaults.style(
-                drawOverlay = false,
-                drawGrid = false,
-                handleColor = Color.Transparent,
-                overlayColor = Color.Transparent,
-                backgroundColor = Color.Black.copy(alpha = 0.4f)
+//                drawOverlay = false,
+//                drawGrid = false,
+//                handleColor = Color.Transparent,
+//                overlayColor = Color.Transparent,
+//                backgroundColor = Color.Black.copy(alpha = 0.4f)
             )
         )
     }

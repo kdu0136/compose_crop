@@ -9,7 +9,6 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.dongun.crop.ImageCropper
 import com.dongun.crop.crop
-import com.dongun.crop.model.AspectRatio
 import com.dongun.crop.model.CropOutline
 import com.dongun.crop.model.OutlineType
 import com.dongun.crop.model.aspectRatios
@@ -31,7 +30,7 @@ object CropDefaults {
         maxZoom: Float = 10f,
         contentScale: ContentScale = ContentScale.Fit,
         cropOutlineProperty: CropOutlineProperty,
-        aspectRatio: AspectRatio = aspectRatios[2].aspectRatio,
+        aspectRatio: Float = aspectRatios[2].aspectRatio,
         overlayRatio: Float = .9f,
         pannable: Boolean = true,
         fling: Boolean = false,
@@ -91,7 +90,7 @@ data class CropProperties internal constructor(
     val handleSize: Float,
     val contentScale: ContentScale,
     val cropOutlineProperty: CropOutlineProperty,
-    val aspectRatio: AspectRatio,
+    val aspectRatio: Float,
     val overlayRatio: Float,
     val pannable: Boolean,
     val fling: Boolean,

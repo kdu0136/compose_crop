@@ -11,7 +11,6 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.asAndroidPath
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
-import com.dongun.crop.model.AspectRatio
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -74,16 +73,13 @@ fun createPolygonShape(sides: Int, degrees: Float = 0f): GenericShape {
 /**
  * Creates a [Rect] shape with given aspect ratio.
  */
-fun createRectShape(aspectRatio: AspectRatio): GenericShape {
+fun createRectShape(aspectRatio: Float): GenericShape {
     return GenericShape { size: Size, _: LayoutDirection ->
-        val value = aspectRatio.value
 
         val width = size.width
         val height = size.height
-        val shapeSize =
-            if (aspectRatio == AspectRatio.Original) Size(width, height)
-            else if (value > 1) Size(width = width, height = width / value)
-            else Size(width = height * value, height = height)
+        val shapeSize = if (aspectRatio > 1) Size(width = width, height = width / aspectRatio)
+            else Size(width = height * aspectRatio, height = height)
 
         addRect(Rect(offset = Offset.Zero, size = shapeSize))
     }
@@ -119,7 +115,7 @@ fun Path.scaleAndTranslatePath(
  * @return [Triple] that contains left, top offset and [Outline]
  */
 fun buildOutline(
-    aspectRatio: AspectRatio,
+    aspectRatio: Float,
     coefficient: Float,
     shape: Shape,
     size: Size,
@@ -145,24 +141,20 @@ fun buildOutline(
  * it returns Size(1000f, 750f), Offset(0f, 125f).
  */
 fun calculateSizeAndOffsetFromAspectRatio(
-    aspectRatio: AspectRatio,
+    aspectRatio: Float,
     coefficient: Float,
     size: Size,
 ): Pair<Size, Offset> {
     val width = size.width
     val height = size.height
 
-    val value = aspectRatio.value
-
-    val newSize = if (aspectRatio == AspectRatio.Original) {
-        Size(width * coefficient, height * coefficient)
-    } else if (value > 1) {
+    val newSize = if (aspectRatio > 1) {
         Size(
             width = coefficient * width,
-            height = coefficient * width / value
+            height = coefficient * width / aspectRatio
         )
     } else {
-        Size(width = coefficient * height * value, height = coefficient * height)
+        Size(width = coefficient * height * aspectRatio, height = coefficient * height)
     }
 
     val left = (width - newSize.width) / 2
