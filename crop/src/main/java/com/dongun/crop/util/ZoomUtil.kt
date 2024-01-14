@@ -1,6 +1,7 @@
 package com.dongun.crop.util
 
 import androidx.compose.ui.graphics.GraphicsLayerScope
+import com.dongun.crop.PrintLog
 import com.dongun.crop.state.TransformState
 
 /**
@@ -63,5 +64,6 @@ internal fun GraphicsLayerScope.update(transformState: TransformState) {
     this.translationY = translationY
 
     // Set rotation
+    PrintLog.d("transformState.rotation", transformState.rotation)
     this.rotationZ = transformState.rotation
 }

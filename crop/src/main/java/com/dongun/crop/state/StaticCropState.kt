@@ -28,9 +28,7 @@ class StaticCropState internal constructor(
     aspectRatio: Float,
     overlayRatio: Float,
     maxZoom: Float = 5f,
-    fling: Boolean = false,
     zoomable: Boolean = true,
-    pannable: Boolean = true,
     rotatable: Boolean = false,
     limitPan: Boolean = false
 ) : CropState(
@@ -40,9 +38,7 @@ class StaticCropState internal constructor(
     aspectRatio = aspectRatio,
     overlayRatio = overlayRatio,
     maxZoom = maxZoom,
-    fling = fling,
     zoomable = zoomable,
-    pannable = pannable,
     rotatable = rotatable,
     limitPan = limitPan
 ) {
@@ -75,13 +71,6 @@ class StaticCropState internal constructor(
 
         // Update image draw rectangle based on pan, zoom or rotation change
         drawAreaRect = updateImageDrawRectFromTransformation()
-
-        // Fling Gesture
-        if (pannable && fling) {
-            if (changes.size == 1) {
-                addPosition(mainPointer.uptimeMillis, mainPointer.position)
-            }
-        }
     }
 
     override suspend fun onGestureStart() = coroutineScope {}
@@ -92,13 +81,11 @@ class StaticCropState internal constructor(
         // or animate back to valid bounds when doubled tapped
         if (!doubleTapped) {
 
-            if (pannable && fling && zoom > 1) {
-                fling {
-                    // We get target value on start instead of updating bounds after
-                    // gesture has finished
-                    drawAreaRect = updateImageDrawRectFromTransformation()
-                    onBoundsCalculated()
-                }
+            if (zoom > 1) {
+                // We get target value on start instead of updating bounds after
+                // gesture has finished
+                drawAreaRect = updateImageDrawRectFromTransformation()
+                onBoundsCalculated()
             } else {
                 onBoundsCalculated()
             }
@@ -115,9 +102,6 @@ class StaticCropState internal constructor(
     ) {
         doubleTapped = true
 
-        if (fling) {
-            resetTracking()
-        }
         resetWithAnimation(pan = pan, zoom = zoom, rotation = rotation)
         drawAreaRect = updateImageDrawRectFromTransformation()
         animateTransformationToOverlayBounds(overlayRect, true)

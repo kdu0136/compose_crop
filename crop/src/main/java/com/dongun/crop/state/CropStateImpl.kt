@@ -48,11 +48,9 @@ abstract class CropState internal constructor(
     containerSize: IntSize,
     drawAreaSize: IntSize,
     maxZoom: Float,
-    internal var fling: Boolean = true,
     internal var aspectRatio: Float,
     internal var overlayRatio: Float,
     zoomable: Boolean = true,
-    pannable: Boolean = true,
     rotatable: Boolean = false,
     limitPan: Boolean = false
 ) : TransformState(
@@ -63,7 +61,6 @@ abstract class CropState internal constructor(
     initialRotation = 0f,
     maxZoom = maxZoom,
     zoomable = zoomable,
-    pannable = pannable,
     rotatable = rotatable,
     limitPan = limitPan
 ) {
@@ -116,8 +113,6 @@ abstract class CropState internal constructor(
 
         if (!initialized) return
 
-        fling = cropProperties.fling
-        pannable = cropProperties.pannable
         zoomable = cropProperties.zoomable
         rotatable = cropProperties.rotatable
 
@@ -295,6 +290,7 @@ abstract class CropState internal constructor(
 
         val zoom = zoom.coerceAtLeast(1f)
 
+        // TODO rotation 계산
         // Calculate new pan based on overlay
         val newDrawAreaRect = calculateValidImageDrawRect(overlayRect, drawAreaRect)
 

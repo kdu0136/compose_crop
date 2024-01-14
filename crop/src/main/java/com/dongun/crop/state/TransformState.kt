@@ -14,6 +14,7 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.input.pointer.util.VelocityTracker
 import androidx.compose.ui.unit.IntSize
+import com.dongun.crop.PrintLog
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
@@ -41,7 +42,6 @@ open class TransformState(
     minZoom: Float = 1f,
     maxZoom: Float = 10f,
     internal var zoomable: Boolean = true,
-    internal var pannable: Boolean = true,
     internal var rotatable: Boolean = true,
     internal var limitPan: Boolean = false
 ) {
@@ -117,14 +117,12 @@ open class TransformState(
         } else {
             0f
         }
-//        Log.d("klaatoo_log/cropper", newRotation.toString())
+        PrintLog.d("rotationChange", rotationChange)
         snapRotationTo(newRotation)
 
-        if (pannable) {
-            val newPan = this.pan + panChange.times(this.zoom)
-            snapPanXto(newPan.x)
-            snapPanYto(newPan.y)
-        }
+        val newPan = this.pan + panChange.times(this.zoom)
+        snapPanXto(newPan.x)
+        snapPanYto(newPan.y)
     }
 
     /**
@@ -146,7 +144,7 @@ open class TransformState(
         panX: Float,
         animationSpec: AnimationSpec<Float> = tween(400)
     ) {
-        if (pannable && pan.x != panX) {
+        if (pan.x != panX) {
             animatablePanX.animateTo(panX, animationSpec)
         }
     }
@@ -155,7 +153,7 @@ open class TransformState(
         panY: Float,
         animationSpec: AnimationSpec<Float> = tween(400)
     ) {
-        if (pannable && pan.y != panY) {
+        if (pan.y != panY) {
             animatablePanY.animateTo(panY, animationSpec)
         }
     }
@@ -174,22 +172,18 @@ open class TransformState(
         rotation: Float,
         animationSpec: AnimationSpec<Float> = tween(400)
     ) {
-        Log.d("klaatoo_log/cropper", "this.rotation: ${this.rotation}, rotation: $rotation")
-        if (rotatable && this.rotation != rotation) {
+        PrintLog.d("animateRotationTo", rotation)
+        if (rotatable) {// && this.rotation != rotation) {
             animatableRotation.animateTo(rotation, animationSpec)
         }
     }
 
     internal suspend fun snapPanXto(panX: Float) {
-        if (pannable) {
-            animatablePanX.snapTo(panX)
-        }
+        animatablePanX.snapTo(panX)
     }
 
     internal suspend fun snapPanYto(panY: Float) {
-        if (pannable) {
-            animatablePanY.snapTo(panY)
-        }
+        animatablePanY.snapTo(panY)
     }
 
     internal suspend fun snapZoomTo(zoom: Float) {
@@ -212,44 +206,6 @@ open class TransformState(
             timeMillis = timeMillis,
             position = position
         )
-    }
-
-    /**
-     * Create a fling gesture when user removes finger from scree to have continuous movement
-     * until [velocityTracker] speed reached to lower bound
-     */
-    internal suspend fun fling(onFlingStart: () -> Unit) = coroutineScope {
-        val velocityTracker = velocityTracker.calculateVelocity()
-        val velocity = Offset(velocityTracker.x, velocityTracker.y)
-        var flingStarted = false
-
-        launch {
-            animatablePanX.animateDecay(
-                velocity.x,
-                exponentialDecay(absVelocityThreshold = 20f),
-                block = {
-                    // This callback returns target value of fling gesture initially
-                    if (!flingStarted) {
-                        onFlingStart()
-                        flingStarted = true
-                    }
-                }
-            )
-        }
-
-        launch {
-            animatablePanY.animateDecay(
-                velocity.y,
-                exponentialDecay(absVelocityThreshold = 20f),
-                block = {
-                    // This callback returns target value of fling gesture initially
-                    if (!flingStarted) {
-                        onFlingStart()
-                        flingStarted = true
-                    }
-                }
-            )
-        }
     }
 
     internal fun resetTracking() {
