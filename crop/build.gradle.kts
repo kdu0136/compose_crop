@@ -12,7 +12,16 @@ android {
         minSdk = Configurations.minSdk
     }
 
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
     buildFeatures {
+        buildConfig = true
         compose = true
     }
     composeOptions {
@@ -29,8 +38,8 @@ dependencies {
     androidTestImplementation(composeBom)
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.preview)
-//    implementation(libs.compose.material)
-//    implementation(libs.compose.material.icons)
+    implementation(libs.compose.material)
+    implementation(libs.compose.material.icons)
     implementation(libs.compose.material3)
 //    implementation(libs.compose.animation.graphics)
 
